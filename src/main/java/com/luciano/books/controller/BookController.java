@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.luciano.books.dto.BookDTO;
+import com.luciano.books.dto.CategoryDTO;
 import com.luciano.books.dto.FactoryEntity;
 import com.luciano.books.exception.NotFoundException;
 import com.luciano.books.dto.FactoryDTO;
 import com.luciano.books.model.Book;
+import com.luciano.books.model.Category;
 import com.luciano.books.service.BookService;
 import com.luciano.books.service.CategoryService;
 
@@ -40,7 +42,7 @@ public class BookController {
         List<BookDTO> list = bookService.getAll().get().stream()
                 .map(FactoryDTO::entityToDTO)
                 .collect(Collectors.toList());
-        System.out.println(list);
+
         return ResponseEntity.ok().header("List-size", Integer.toString(list.size())).body(list);
     }
 
@@ -52,8 +54,22 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BookDTO());
         }
         BookDTO bookDTO = FactoryDTO.entityToDTO(book.get());
-        System.out.println(bookDTO);
         return ResponseEntity.ok().body(bookDTO);
+    }
+
+    @GetMapping("/bycategory/{category}")
+    public ResponseEntity<List<BookDTO>> get(@PathVariable("category") String categoryName) {
+        Optional<Category> category = categoryService.getByName(categoryName);
+
+        if(!category.isPresent()){
+            throw new NotFoundException("Categoria " + categoryName + " não encontrada!");
+        }
+        List<BookDTO> bookDTOs = bookService.findByCategory(category.get()).stream()
+                .map(FactoryDTO::entityToDTO)
+                .collect(Collectors.toList());
+        ;
+
+        return ResponseEntity.ok().body(bookDTOs);
     }
 
     @PostMapping

@@ -29,7 +29,6 @@ public abstract class GenericService<T extends IModel, RE extends GenericReposit
     }
 
     public T save(T t) {
-        System.out.println(t);
         return repository.create(t);
     }
 

@@ -19,8 +19,7 @@ public abstract class GenericRepository<T extends IModel> implements IRepository
     Collection<T> db;
 
     public List<T> getAll() {
-        System.out.println(this.db.stream().collect(Collectors.toList()));
-        return this.db.stream().collect(Collectors.toList());
+       return this.db.stream().collect(Collectors.toList());
     }
 
     public Optional<T> getByName(String name) {

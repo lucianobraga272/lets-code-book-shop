@@ -2,11 +2,13 @@ package com.luciano.books.repository;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
 import com.luciano.books.model.Book;
+import com.luciano.books.model.Category;
 
 @Repository
 public class BookRepository extends GenericRepository<Book> {
@@ -15,6 +17,12 @@ public class BookRepository extends GenericRepository<Book> {
         super(db);
     }
 
+    public List<Book> findByCategory(Category category){
+        var list = db.stream().collect(Collectors.toList());
+       
+        return list.stream().filter(s -> s.getCategory().equals(category)).collect(Collectors.toList());
+    
+    }
     public Book sell(Integer id) {
         var list = db.stream().collect(Collectors.toList());
         Book book = new Book();
